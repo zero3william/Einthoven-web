@@ -1,0 +1,29 @@
+{
+  "name": "einthoven-web",
+  "version": "1.0.0",
+  "description": "For Users & Doctors",
+  "author": "William_Chen",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.3.6",
+    "@nuxtjs/pwa": "^2.6.0",
+    "animate.css": "^3.7.0",
+    "animejs": "^3.0.1",
+    "cross-env": "^5.2.0",
+    "element-ui": "^2.4.11",
+    "node-sass": "^4.11.0",
+    "normalize.css": "^8.0.1",
+    "nuxt": "^2.4.0"
+  },
+  "devDependencies": {
+    "element-theme-chalk": "^2.7.0",
+    "nodemon": "^1.18.9",
+    "sass-loader": "^7.1.0"
+  }
+}
