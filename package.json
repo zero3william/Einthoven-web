@@ -1,6 +1,7 @@
 {
   "name": "einthoven-web",
   "version": "1.0.0",
+  "license": "MIT",
   "description": "For Users & Doctors",
   "author": "William_Chen",
   "private": true,

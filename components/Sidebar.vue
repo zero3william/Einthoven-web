@@ -19,7 +19,9 @@
 export default {
   name: "Sidebar",
   methods: {
-    handleLogout() {}
+    handleLogout() {
+      this.$router.push({ path: "login", query: { test: "hello" } });
+    }
   }
 };
 </script>

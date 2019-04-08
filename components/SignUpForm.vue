@@ -37,7 +37,7 @@
         type="password"
         placeholder="Confirm Password"
         prefix-icon="el-icon-search"
-        v-model="ruleForm.password"
+        v-model="ruleForm.password2"
         autocomplete="off"
       ></el-input>
     </el-form-item>
@@ -57,12 +57,15 @@ export default {
     return {
       ruleForm: {
         email: "",
-        password: ""
+        password: "",
+        password2: ""
       },
       rules: {
-        email: [
-          { required: true, message: "Please Enter the Email", trigger: "blur" }
-        ],
+        email: {
+          required: true,
+          message: "Please Enter the Email",
+          trigger: "blur"
+        },
         password: [
           {
             required: true,
@@ -75,7 +78,19 @@ export default {
             message: "Should be 8 - 16 words",
             trigger: "blur"
           }
-        ]
+        ],
+        password2: {
+          validator: (rule, value, callback) => {
+            if (value === "") {
+              callback(new Error("请再次输入密码"));
+            } else if (value !== this.ruleForm.password) {
+              callback(new Error("两次输入密码不一致!"));
+            } else {
+              callback();
+            }
+          },
+          trigger: "blur"
+        }
       }
     };
   },

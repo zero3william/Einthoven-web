@@ -11,7 +11,7 @@
     ></el-date-picker>
     <p></p>
     <el-card>
-      <el-table :data="tableData">
+      <el-table :data="tableData" @row-click="handleRowClick">
         <el-table-column prop="startTime" label="Start Time" width="180"></el-table-column>
         <el-table-column prop="recordTime" label="Record Time" width="180"></el-table-column>
         <el-table-column prop="label" label="Label"></el-table-column>
@@ -95,6 +95,9 @@ export default {
   methods: {
     handleDelete(row) {
       this.tableData = this.tableData.filter(item => item.id !== row.id);
+    },
+    handleRowClick(row, column, event) {
+      this.$router.push({ path: "recordsDetail", query: { id: row.id } });
     }
   },
   mounted: function() {}
