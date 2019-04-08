@@ -10,7 +10,23 @@ import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 
 export default {
-  components: { Header, Sidebar }
+  components: { Header, Sidebar },
+  methods: {
+    checkLogin() {
+      if (!window.sessionStorage["session"]) {
+        this.$router.push("/login");
+      } else {
+        const payload = this.$store.commit(
+          "login",
+          JSON.parse(window.sessionStorage["session"])
+        );
+        this.$router.push("/recordsList");
+      }
+    }
+  },
+  beforeMount: function() {
+    this.checkLogin();
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -36,7 +52,8 @@ export default {
   #main {
     flex-grow: 1;
     overflow: auto;
-    padding: 68px 16px 16px 16px;
+    margin-top: 56px;
+    padding: 16px;
   }
 }
 </style>

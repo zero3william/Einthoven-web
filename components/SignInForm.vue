@@ -66,7 +66,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           const payload = this.$store.commit("login", this.payload);
-          this.$router.push({ path: "recordsList", query: { test: "hello" } });
+          this.$router.push({ path: "recordsList" });
         } else {
           return false;
         }

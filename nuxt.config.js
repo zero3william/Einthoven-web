@@ -43,7 +43,10 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ["@/plugins/element-ui", '@/plugins/anime'],
+  plugins: ["@/plugins/element-ui", '@/plugins/anime', {
+    src: '@/plugins/pixi',
+    ssr: false
+  }],
 
   /*
    ** Nuxt.js modules

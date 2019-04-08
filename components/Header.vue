@@ -2,7 +2,10 @@
   <header class="header-container">
     <el-row type="flex" justify="space-between" align="middle">
       {{new Date()}}
-      <img src="/user32x32.png">
+      <div>
+        {{$store.state.userinfo.email}}
+        <img src="/user32x32.png">
+      </div>
     </el-row>
   </header>
 </template>

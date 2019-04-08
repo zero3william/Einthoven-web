@@ -20,7 +20,8 @@
     "element-ui": "^2.4.11",
     "node-sass": "^4.11.0",
     "normalize.css": "^8.0.1",
-    "nuxt": "^2.4.0"
+    "nuxt": "^2.4.0",
+    "pixi.js": "^4.8.7"
   },
   "devDependencies": {
     "element-theme-chalk": "^2.7.0",

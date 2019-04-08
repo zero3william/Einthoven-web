@@ -8,7 +8,8 @@ export const mutations = {
     state.userinfo = {
       ...state.userinfo,
       ...payload
-    }
+    };
+    window.sessionStorage["session"] = JSON.stringify(state.userinfo);
   },
   logout(state) {
     state.userinfo = null

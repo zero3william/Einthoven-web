@@ -11,25 +11,50 @@
     ></el-date-picker>
     <p></p>
     <el-card>
-      <el-table :data="tableData" @row-click="handleRowClick">
+      <el-table :data="tableData">
         <el-table-column prop="startTime" label="Start Time" width="180"></el-table-column>
         <el-table-column prop="recordTime" label="Record Time" width="180"></el-table-column>
         <el-table-column prop="label" label="Label"></el-table-column>
-        <el-table-column fixed="right" label="Delete" width="70">
+        <el-table-column>
           <template slot-scope="scope">
-            <el-button @click="handleDelete(scope.row)" type="text" size="small">del</el-button>
+            <el-button
+              @click="(event) => handleDetail(scope.row,event)"
+              type="text"
+              size="small"
+              style="margin-right:40px;"
+            >Detail</el-button>
+            <el-button
+              @click="(event) => handleDelete(scope.row,event)"
+              type="text"
+              size="small"
+            >Delete</el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-card>
+
+    <el-dialog custom-class="test" :visible.sync="dialogVisible" width="96%">
+      <div class="title">{{dialogTitle}}</div>
+      <el-tabs type="border-card">
+        <el-tab-pane label="ECG">
+          <ECG/>
+        </el-tab-pane>
+        <el-tab-pane label="Heart Rate">Todo</el-tab-pane>
+        <el-tab-pane label="Temperature">Todo</el-tab-pane>
+      </el-tabs>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import ECG from "../components/ECG";
+
 export default {
-  components: {},
+  components: { ECG },
   data() {
     return {
+      dialogVisible: false,
+      dialogTitle: "",
       filters: {
         dateRange: ["", ""]
       },
@@ -93,17 +118,24 @@ export default {
     };
   },
   methods: {
-    handleDelete(row) {
+    handleDelete(row, event) {
       this.tableData = this.tableData.filter(item => item.id !== row.id);
     },
-    handleRowClick(row, column, event) {
-      this.$router.push({ path: "recordsDetail", query: { id: row.id } });
+    handleDetail(row, event) {
+      this.dialogTitle = `開始時間: ${row.startTime}  紀錄時長: ${
+        row.recordTime
+      }`;
+      this.dialogVisible = true;
     }
-  },
-  mounted: function() {}
+  }
 };
 </script>
 
 <style lang="scss" scoped>
+.title {
+  position: absolute;
+  top: 20px;
+  left: 22px;
+}
 </style>
 
