@@ -33,7 +33,7 @@
       </el-table>
     </el-card>
 
-    <el-dialog custom-class="test" :visible.sync="dialogVisible" width="96%">
+    <el-dialog custom-class="test" :visible.sync="dialogVisible" width="96%" top="2%">
       <div class="title">{{dialogTitle}}</div>
       <el-tabs type="border-card">
         <el-tab-pane label="ECG">

@@ -16,10 +16,13 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
+
 export default {
   name: "Sidebar",
   methods: {
     handleLogout() {
+      this.$store.commit("logout");
       this.$router.push({ path: "login", query: { test: "hello" } });
     }
   }
