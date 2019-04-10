@@ -1,18 +1,32 @@
+import {
+  locales
+} from '../locales/lang';
+
 // store/index.js
-export const state = () => ({
-  userinfo: null
-})
+export const state = () => {
+  return ({
+    userinfo: window.sessionStorage["session"] ? JSON.parse(window.sessionStorage["session"]) : null,
+    locales: locales,
+    locale: window.localStorage["lang"] || locales[0]
+  })
+}
 
 export const mutations = {
-  login(state, payload) {
+  LOGIN(state, payload) {
     state.userinfo = {
       ...state.userinfo,
       ...payload
     };
     window.sessionStorage["session"] = JSON.stringify(state.userinfo);
   },
-  logout(state) {
+  LOGOUT(state) {
     state.userinfo = null;
     window.sessionStorage.removeItem("session");
+  },
+  SET_LANG(state, locale) {
+    if (state.locales.indexOf(locale) !== -1) {
+      state.locale = locale;
+      window.localStorage["lang"] = locale;
+    }
   }
 }

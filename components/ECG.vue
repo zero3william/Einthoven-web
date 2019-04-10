@@ -26,23 +26,29 @@ export default {
     };
   },
   mounted() {
-    let app = new PIXI.Application({
-      width: this.param.width,
-      height: this.param.height,
-      antialias: true
-    });
-    document.getElementById("pixi-container").appendChild(app.view);
+    this.$nextTick(function() {
+      const parent = document.getElementById("pixi-container");
+      this.param.width = parent.clientWidth;
+      this.param.height = parent.clientHeight;
 
-    this.drawGrid(app);
-    this.ecgData = this.fakeData();
-    let dataLine = this.drawData(app, this.time);
+      let app = new PIXI.Application({
+        width: this.param.width,
+        height: this.param.height,
+        antialias: true
+      });
+      document.getElementById("pixi-container").appendChild(app.view);
 
-    const vue = this;
+      this.drawGrid(app);
+      this.ecgData = this.fakeData();
+      let dataLine = this.drawData(app, this.time);
 
-    app.ticker.add(function(delta) {
-      vue.time += delta / 60;
-      dataLine.clear();
-      dataLine = vue.drawData(app, vue.time);
+      const vue = this;
+
+      app.ticker.add(function(delta) {
+        vue.time += delta / 60;
+        dataLine.clear();
+        dataLine = vue.drawData(app, vue.time);
+      });
     });
   },
   unmounted() {
@@ -57,7 +63,7 @@ export default {
       line.moveTo(data_x, data_y);
 
       const index = parseInt(time * 250);
-      const subArray = this.ecgData.slice(index, index + 750);
+      const subArray = this.ecgData.slice(index, index + 1250);
       if (subArray.length < 500) app.ticker.stop();
       subArray.forEach((item, index) => {
         line.lineTo(data_x + (index * d) / 10, data_y + item);
@@ -170,7 +176,8 @@ export default {
 
 <style lang="scss" scoped>
 #pixi-container {
-  // overflow: auto;
+  overflow: hidden;
+  height: 300px;
   cursor: move;
   cursor: -webkit-grab;
   cursor: -moz-grab;

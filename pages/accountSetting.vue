@@ -1,6 +1,6 @@
 <template>
   <el-tabs v-model="activeName">
-    <el-tab-pane label="Basic Info" name="basic">
+    <el-tab-pane :label="$t('basicInfo')" name="basic">
       <el-card>
         <el-form
           :model="basicInfoForm"
@@ -8,34 +8,48 @@
           ref="basicInfoForm"
           label-width="70px"
         >
-          <el-form-item prop="name" label="Name">
+          <el-form-item prop="name" :label="$t('name')">
             <el-input v-model="basicInfoForm.name" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item prop="email" label="Email">
+          <el-form-item prop="email" :label="$t('email')">
             <el-input v-model="basicInfoForm.email" autocomplete="off"></el-input>
           </el-form-item>
-          <el-button round type="primary" @click="submitForm('basicInfoForm')">SAVE</el-button>
+          <el-button
+            style="margin:20px 70px"
+            round
+            type="primary"
+            size="mini"
+            @click="submitForm('basicInfoForm')"
+          >{{$t('SAVE')}}</el-button>
         </el-form>
       </el-card>
     </el-tab-pane>
-    <el-tab-pane label="Change Password" name="password">
-      <el-form
-        :model="changePasswordForm"
-        :rules="changePasswordFormRules"
-        ref="changePasswordForm"
-        label-width="120px"
-      >
-        <el-form-item prop="old" label="Old Password">
-          <el-input v-model="changePasswordForm.old" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item prop="new" label="New Password">
-          <el-input v-model="changePasswordForm.new" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item prop="confirm" label="Confirm Password">
-          <el-input v-model="changePasswordForm.confirm" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-button round type="primary" @click="submitForm('changePasswordForm')">Change</el-button>
-      </el-form>
+    <el-tab-pane :label="$t('changePassword')" name="password">
+      <el-card>
+        <el-form
+          :model="changePasswordForm"
+          :rules="changePasswordFormRules"
+          ref="changePasswordForm"
+          label-width="120px"
+        >
+          <el-form-item prop="old" :label="$t('oldPassword')">
+            <el-input v-model="changePasswordForm.old" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item prop="new" :label="$t('newPassword')">
+            <el-input v-model="changePasswordForm.new" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item prop="confirm" :label="$t('confirmPassword')">
+            <el-input v-model="changePasswordForm.confirm" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-button
+            style="margin:20px 120px"
+            round
+            type="primary"
+            size="mini"
+            @click="submitForm('changePasswordForm')"
+          >{{$t('CHANGE')}}</el-button>
+        </el-form>
+      </el-card>
     </el-tab-pane>
   </el-tabs>
 </template>

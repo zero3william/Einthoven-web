@@ -4,16 +4,16 @@
       v-model="filters.dateRange"
       type="daterange"
       unlink-panels
-      range-separator="至"
-      start-placeholder="开始日期"
-      end-placeholder="结束日期"
+      range-separator="-"
+      :start-placeholder="$t('from')"
+      :end-placeholder="$t('to')"
       :picker-options="pickerOptions"
     ></el-date-picker>
     <p></p>
     <el-card>
       <el-table :data="tableData">
-        <el-table-column prop="startTime" label="Start Time" width="180"></el-table-column>
-        <el-table-column prop="recordTime" label="Record Time" width="180"></el-table-column>
+        <el-table-column prop="startTime" :label="$t('startTime')" width="180"></el-table-column>
+        <el-table-column prop="recordTime" :label="$t('recordTime')" width="180"></el-table-column>
         <el-table-column prop="label" label="Label"></el-table-column>
         <el-table-column>
           <template slot-scope="scope">
@@ -22,12 +22,12 @@
               type="text"
               size="small"
               style="margin-right:40px;"
-            >Detail</el-button>
+            >{{$t('detail')}}</el-button>
             <el-button
               @click="(event) => handleDelete(scope.row,event)"
               type="text"
               size="small"
-            >Delete</el-button>
+            >{{$t('delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>

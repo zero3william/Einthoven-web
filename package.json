@@ -21,7 +21,8 @@
     "node-sass": "^4.11.0",
     "normalize.css": "^8.0.1",
     "nuxt": "^2.4.0",
-    "pixi.js": "^4.8.7"
+    "pixi.js": "^4.8.7",
+    "vue-i18n": "^8.10.0"
   },
   "devDependencies": {
     "element-theme-chalk": "^2.7.0",

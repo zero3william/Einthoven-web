@@ -13,18 +13,12 @@ export default {
   components: { Header, Sidebar },
   methods: {
     checkLogin() {
-      if (!window.sessionStorage["session"]) {
+      if (!this.$store.state.userinfo) {
         this.$router.push("/login");
-      } else {
-        const payload = this.$store.commit(
-          "login",
-          JSON.parse(window.sessionStorage["session"])
-        );
-        this.$router.push("/recordsList");
       }
     }
   },
-  beforeMount: function() {
+  created: function() {
     this.checkLogin();
   }
 };
