@@ -1,5 +1,5 @@
 <template>
-  <el-row type="flex" align="middle" justify="center" class="animate-block bg-primary">
+  <el-row type="flex" align="middle" justify="center" class="animate-block">
     <div>
       <transition
         mode="out-in"
@@ -7,11 +7,11 @@
         leave-active-class="animated fadeOut"
       >
         <div v-if="ok">
-          <h3>{{title}}</h3>
-          <p>{{desc}}</p>
+          <h3>{{$t(title)}}</h3>
+          <p v-html="$t(desc)"></p>
         </div>
       </transition>
-      <el-button round class="button" @click="onClick">{{btn}}</el-button>
+      <el-button round class="button" @click="onClick">{{$t(btn)}}</el-button>
     </div>
   </el-row>
 </template>
@@ -58,6 +58,7 @@ export default {
 
 <style lang="scss" scoped>
 .animate-block {
+  background: radial-gradient(farthest-corner at 40px 40px, #207a94, #11a59c);
   width: 30vw;
   height: 100vh;
   color: #fff;

@@ -1,28 +1,40 @@
 <template>
   <div>
-    <h3 class="title">FilterPlace</h3>
+    <el-row style="margin: 0 0 10px;">
+      <el-button
+        v-if="pixiStatus==='pause'"
+        icon="iconfont icon-play"
+        type="text"
+        @click="startPixi"
+      ></el-button>
+      <el-button v-if="pixiStatus==='play'" icon="iconfont icon-stop" type="text" @click="stopPixi"></el-button>
+    </el-row>
     <div id="pixi-container"></div>
   </div>
 </template>
 
 <script>
+// import fakeData from "./ecgdata";
+
 export default {
   name: "ECG",
   data() {
     return {
       param: {
-        width: 1250, //canvas width
-        height: 300, //canvas height
+        width: 0, //canvas width
+        height: 0, //canvas height
         offsetx: 0, //grid position
         offsety: 0, //grid position
         d: 10, //scale of small box
         ref_x: 20, // reference pulse x,
-        ref_y: 200, // reference pulse y, height / 2 + 5 * d
+        ref_y: 300, // reference pulse y, height / 2 + 5 * d
         data_x: 100, //ecgData x
-        data_y: 200 //ecgData y
+        data_y: 700 //ecgData y
       },
-      ecgData: [],
-      time: 0
+      ecgData: {},
+      time: 0,
+      pixiApp: null,
+      pixiStatus: "pause"
     };
   },
   mounted() {
@@ -36,75 +48,57 @@ export default {
         height: this.param.height,
         antialias: true
       });
+      this.pixiApp = app;
       document.getElementById("pixi-container").appendChild(app.view);
 
       this.drawGrid(app);
-      this.ecgData = this.fakeData();
-      let dataLine = this.drawData(app, this.time);
 
-      const vue = this;
+      this.asyncData({ interval: 3600 }).then(resp => {
+        this.ecgData = resp.data.data;
 
-      app.ticker.add(function(delta) {
-        vue.time += delta / 60;
-        dataLine.clear();
-        dataLine = vue.drawData(app, vue.time);
+        let dataLine = new PIXI.Graphics();
+        this.drawData(app, this.time, dataLine);
+
+        const vue = this;
+
+        app.ticker.add(function(delta) {
+          vue.time += delta / 60;
+          dataLine.clear();
+          vue.drawData(app, vue.time, dataLine);
+        });
+        app.ticker.stop();
       });
     });
   },
-  unmounted() {
-    console.log("unmounted ???");
-  },
   methods: {
-    drawData(app, time) {
+    startPixi() {
+      this.pixiApp.ticker.start();
+      this.pixiStatus = "play";
+    },
+    stopPixi() {
+      this.pixiApp.ticker.stop();
+      this.pixiStatus = "pause";
+    },
+    asyncData(payload) {
+      let data = this.$api.post("/Data/RetrieveECG", payload);
+      return data;
+    },
+    drawData(app, time, line) {
       const { data_x, data_y, d } = this.param;
-      let line = new PIXI.Graphics();
+      const { ecg, peak } = this.ecgData;
 
       line.lineStyle(2, 0x00ff00, 1);
-      line.moveTo(data_x, data_y);
 
       const index = parseInt(time * 250);
-      const subArray = this.ecgData.slice(index, index + 1250);
+      const subArray = ecg.slice(index, index + 2000);
       if (subArray.length < 500) app.ticker.stop();
+
+      line.moveTo(data_x, data_y - subArray[0] * 100);
       subArray.forEach((item, index) => {
-        line.lineTo(data_x + (index * d) / 10, data_y + item);
+        line.lineTo(data_x + (index * d) / 10, data_y - item * 100);
       });
       app.stage.addChild(line);
       return line;
-    },
-    fakeData() {
-      const { d } = this.param;
-      const data_length = 5; //sec
-      let data = [];
-      let this_pick = 0;
-      let next_pick = parseInt(Math.random() * 50) + 200;
-      for (let i = 0; i < 250 * data_length; i++) {
-        if (i - this_pick <= next_pick) {
-          data[i] = this.randomBase();
-        } else {
-          this_pick = i;
-          next_pick = parseInt(Math.random() * 100) + 100;
-          const start = this.randomBase();
-          const end = Math.random() + 0.5;
-          data[i++] = start - 2 * d * end;
-          data[i++] = start - 4 * d * end;
-          data[i++] = start - 6 * d * end;
-          data[i++] = start - 8 * d * end;
-          data[i++] = start - 10 * d * end;
-          data[i++] = start - 12 * d * end;
-          data[i++] = start - 10 * d * end;
-          data[i++] = start - 8 * d * end;
-          data[i++] = start - 6 * d * end;
-          data[i++] = start - 4 * d * end;
-          data[i++] = start - 2 * d * end;
-          data[i++] = start * end;
-          data[i++] = start + 2 * d * end;
-          data[i++] = start + 1.5 * d * end;
-          data[i++] = start + 1 * d * end;
-          data[i++] = start + 0.5 * d * end;
-          data[i++] = start * end;
-        }
-      }
-      return data.map(item => parseFloat(item.toFixed(2)));
     },
     randomBase() {
       const { d } = this.param;
@@ -177,7 +171,7 @@ export default {
 <style lang="scss" scoped>
 #pixi-container {
   overflow: hidden;
-  height: 300px;
+  height: 450px;
   cursor: move;
   cursor: -webkit-grab;
   cursor: -moz-grab;

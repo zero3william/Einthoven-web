@@ -1,6 +1,12 @@
 <template>
   <aside class="aside-container">
-    <h3>Einthoven Brand</h3>
+    <el-row type="flex" justify="center" align="bottom" style="margin: 20px 0;">
+      <img src="/logo32.png">
+      <span
+        style="font-family:'Italianno',cursive;font-size:18px;font-weight:bold;padding-right:20px;"
+      >EINTHOVEN</span>
+    </el-row>
+
     <el-menu default-active="1" :router="true">
       <el-menu-item index="1" :route="{ path:'recordsList'}">
         <i class="iconfont icon-monitoring"></i>
@@ -11,9 +17,8 @@
         <span slot="title">{{$t('accountSetting')}}</span>
       </el-menu-item>
     </el-menu>
-    <el-button id="logout" type="text" @click="handleLogout">
-      <i class="iconfont icon-logout" style="margin-right:6px;"></i>
-      {{$t('logout')}}
+    <el-button id="logout" type="text" icon="iconfont icon-logout" @click="handleLogout">
+      <span>{{$t('logout')}}</span>
     </el-button>
   </aside>
 </template>
@@ -61,7 +66,7 @@ export default {
     bottom: -40px;
     color: #fff;
     span {
-      margin-left: 10px !important;
+      margin-left: 6px !important;
     }
   }
 }

@@ -15,6 +15,10 @@ export default {
     checkLogin() {
       if (!this.$store.state.userinfo) {
         this.$router.push("/login");
+        this.$message({
+          type: "warning",
+          message: this.$t("pleaseLogin")
+        });
       }
     }
   },
@@ -24,6 +28,10 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+$screenMinWidth: 1080px;
+$sidebarMinWidth: 200px;
+$mainMinWidth: $screenMinWidth - $sidebarMinWidth;
+
 #root-container {
   height: 100vh;
   width: 100vw;
@@ -31,19 +39,21 @@ export default {
   overflow: hidden;
   display: flex;
   #header {
-    width: calc(100vw - 200px);
+    width: calc(100vw - #{$sidebarMinWidth});
     position: absolute;
     z-index: 1;
     top: 0;
-    left: 200px;
+    left: $sidebarMinWidth;
   }
   #sidebar {
-    width: 200px;
+    width: $sidebarMinWidth;
+    min-width: $sidebarMinWidth;
     height: 100vh;
     overflow: auto;
-    background: #207a94;
+    background: linear-gradient(#2e8da7 10%, #11a59c 70%);
   }
   #main {
+    min-width: $mainMinWidth;
     flex-grow: 1;
     overflow: auto;
     margin-top: 56px;

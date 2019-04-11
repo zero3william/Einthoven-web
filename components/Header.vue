@@ -8,43 +8,24 @@
           src="/user32x32.png"
           style="margin:0 20px;"
         >
-        <el-button-group>
-          <el-button
-            size="mini"
-            @click="changeLang(locales[0])"
-            plain
-            type="primary"
-            style="border-right-color:#e7f6f5;"
-          >En</el-button>
-          <el-button
-            size="mini"
-            @click="changeLang(locales[1])"
-            plain
-            type="primary"
-            style="border-left-color:#e7f6f5;"
-          >中</el-button>
-        </el-button-group>
+        <LocaleSelector/>
       </el-row>
     </el-row>
   </header>
 </template>
 
 <script>
-import { locales } from "../locales/lang";
+import LocaleSelector from "../components/LocaleSelector";
 
 export default {
   name: "Header",
+  components: { LocaleSelector },
   data() {
     return {
-      locales: locales,
       nowTime: ""
     };
   },
   methods: {
-    changeLang(lang) {
-      this.$store.commit("SET_LANG", lang);
-      this.$i18n.locale = window.localStorage["lang"];
-    },
     now() {
       const _date = new Date();
       const year = _date.getFullYear();
@@ -58,13 +39,11 @@ export default {
         _date.getMinutes() <= 9 ? `0${_date.getMinutes()}` : _date.getMinutes();
       const second =
         _date.getSeconds() <= 9 ? `0${_date.getSeconds()}` : _date.getSeconds();
-      return `${year}-${month}-${date} ${hour}:${minute}:${second}`;
-    }
-  },
-  computed: {
-    locale() {
-      const lang_icon = ["En", "中"];
-      return lang_icon[locales.indexOf(this.$i18n.locale)];
+      const timezone =
+        _date.getTimezoneOffset() / -60 >= 0
+          ? `+${_date.getTimezoneOffset() / -60}`
+          : `-${_date.getTimezoneOffset() / -60}`;
+      return `${year}-${month}-${date} ${hour}:${minute}:${second} (UTC${timezone})`;
     }
   },
   mounted() {

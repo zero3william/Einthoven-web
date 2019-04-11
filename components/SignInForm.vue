@@ -1,11 +1,11 @@
 <template>
   <el-form class="login-form-container text-center" :model="ruleForm" :rules="rules" ref="ruleForm">
-    <h2 class="primary-text">SIGN IN TO EINTHOVEN</h2>
+    <h2 class="primary-text">{{$t('signInFormTitle')}}</h2>
     <AutoCompleteBlocker/>
     <el-form-item prop="email">
       <el-input
-        placeholder="Email"
-        prefix-icon="el-icon-search"
+        :placeholder="$t('account')"
+        prefix-icon="iconfont icon-user"
         v-model="ruleForm.email"
         autocomplete="off"
       ></el-input>
@@ -13,15 +13,15 @@
     <el-form-item prop="password">
       <el-input
         type="password"
-        placeholder="Password"
-        prefix-icon="el-icon-search"
+        :placeholder="$t('password')"
+        prefix-icon="iconfont icon-lock-outline"
         v-model="ruleForm.password"
         autocomplete="off"
       ></el-input>
     </el-form-item>
     <el-row type="flex" justify="space-between" align="middle">
-      <nuxt-link to="/login/recovery">Forget Password ?</nuxt-link>
-      <el-button round type="primary" @click="submitForm('ruleForm')">SIGN IN</el-button>
+      <nuxt-link to="/login/recovery">{{$t('forgetPassword')}}</nuxt-link>
+      <el-button round type="primary" @click="submitForm('ruleForm')">{{$t('entryNavBtn2')}}</el-button>
     </el-row>
   </el-form>
 </template>

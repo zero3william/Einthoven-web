@@ -9,6 +9,11 @@
       :click="animate"
     ></EntryNav>
     <SignUpForm></SignUpForm>
+    <LocaleSelector
+      id="locale-select-container"
+      data-ease="easeOutElastic(.8, .8)"
+      style="position:fixed;top:14px;left:60vw;"
+    />
   </el-row>
 </template>
 
@@ -16,11 +21,12 @@
 import SignInForm from "../components/SignInForm";
 import SignUpForm from "../components/SignUpForm";
 import EntryNav from "../components/EntryNav";
+import LocaleSelector from "../components/LocaleSelector";
 import anime from "animejs";
 
 export default {
   layout: "login",
-  components: { SignInForm, SignUpForm, EntryNav },
+  components: { SignInForm, SignUpForm, EntryNav, LocaleSelector },
   data() {
     return {
       page: "signIn",
@@ -29,12 +35,9 @@ export default {
         desc: "",
         btn: ""
       },
-      title: ["Hello, Friend!", "Welcome Back!"],
-      desc: [
-        "Immidiately create one and start your journey with us",
-        "Sign in and enjoy all services"
-      ],
-      btn: ["SIGN UP", "SIGN IN"]
+      title: ["entryNavTitle1", "entryNavTitle2"],
+      desc: ["entryNavDesc1", "entryNavDesc2"],
+      btn: ["entryNavBtn1", "entryNavBtn2"]
     };
   },
   methods: {
@@ -49,6 +52,14 @@ export default {
       anime({
         targets: ".entry-container",
         left: num === 0 ? 0 : "-70vw",
+        easing: function(el) {
+          return el.getAttribute("data-ease");
+        },
+        duration: 1300
+      });
+      anime({
+        targets: "#locale-select-container",
+        left: num === 0 ? "60vw" : "35vw",
         easing: function(el) {
           return el.getAttribute("data-ease");
         },

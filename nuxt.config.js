@@ -19,7 +19,11 @@ export default {
     }, {
       rel: "stylesheet",
       type: "text/css",
-      href: "//at.alicdn.com/t/font_1121520_9y7l3nhqdgj.css"
+      href: "//at.alicdn.com/t/font_1121520_ub6gdletrmk.css"
+    }, {
+      rel: "stylesheet",
+      type: "text/css",
+      href: "https://fonts.googleapis.com/css?family=Italianno"
     }]
   },
   /*
@@ -32,7 +36,7 @@ export default {
   plugins: ["@/plugins/element-ui", '@/plugins/anime', {
     src: '@/plugins/pixi',
     ssr: false
-  }, "@/plugins/i18n"],
+  }, "@/plugins/i18n", "@/plugins/axios"],
   modules: [
     "@nuxtjs/axios",
     "@nuxtjs/pwa"

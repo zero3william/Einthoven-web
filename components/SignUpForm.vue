@@ -5,20 +5,20 @@
     :rules="rules"
     ref="ruleForm"
   >
-    <h2 class="primary-text">CREATE ACCOUNT</h2>
+    <h2 class="primary-text">{{$t('signUpFormTitle')}}</h2>
     <AutoCompleteBlocker/>
     <el-form-item prop="name">
       <el-input
-        placeholder="Name"
-        prefix-icon="el-icon-search"
+        :placeholder="$t('name')"
+        prefix-icon="iconfont icon-user"
         v-model="ruleForm.name"
         autocomplete="off"
       ></el-input>
     </el-form-item>
     <el-form-item prop="email">
       <el-input
-        placeholder="Email"
-        prefix-icon="el-icon-search"
+        :placeholder="$t('email')"
+        prefix-icon="iconfont icon-email"
         v-model="ruleForm.email"
         autocomplete="off"
       ></el-input>
@@ -26,8 +26,8 @@
     <el-form-item prop="password">
       <el-input
         type="password"
-        placeholder="Password"
-        prefix-icon="el-icon-search"
+        :placeholder="$t('password')"
+        prefix-icon="iconfont icon-lock-outline"
         v-model="ruleForm.password"
         autocomplete="off"
       ></el-input>
@@ -35,13 +35,13 @@
     <el-form-item prop="password2">
       <el-input
         type="password"
-        placeholder="Confirm Password"
-        prefix-icon="el-icon-search"
+        :placeholder="$t('confirmPassword')"
+        prefix-icon="iconfont icon-lock-outline"
         v-model="ruleForm.password2"
         autocomplete="off"
       ></el-input>
     </el-form-item>
-    <el-button round type="primary" @click="submitForm('ruleForm')">SIGN UP</el-button>
+    <el-button round type="primary" @click="submitForm('ruleForm')">{{$t('entryNavBtn1')}}</el-button>
   </el-form>
 </template>
 
