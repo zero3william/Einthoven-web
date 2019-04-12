@@ -1,5 +1,5 @@
 <template>
-  <div id="root-container">
+  <div id="root-container" v-if="isLogin">
     <Header id="header"/>
     <Sidebar id="sidebar"/>
     <nuxt id="main"/>
@@ -11,6 +11,11 @@ import Sidebar from "../components/Sidebar";
 
 export default {
   components: { Header, Sidebar },
+  data() {
+    return {
+      isLogin: false
+    };
+  },
   methods: {
     checkLogin() {
       if (!this.$store.state.userinfo) {
@@ -19,6 +24,8 @@ export default {
           type: "warning",
           message: this.$t("pleaseLogin")
         });
+      } else {
+        this.isLogin = true;
       }
     }
   },

@@ -14,6 +14,12 @@
       data-ease="easeOutElastic(.8, .8)"
       style="position:fixed;top:14px;left:60vw;"
     />
+    <el-row id="logo-container" type="flex" justify="center" align="bottom">
+      <img src="/logo32.png">
+      <span
+        style="font-family:'Italianno',cursive;font-size:18px;font-weight:bold;padding-right:20px;"
+      >EINTHOVEN</span>
+    </el-row>
   </el-row>
 </template>
 
@@ -65,6 +71,11 @@ export default {
         },
         duration: 1300
       });
+      anime({
+        targets: "#logo-container",
+        color: num === 0 ? "#11a59c" : "#ffffff",
+        duration: 1800
+      });
     }
   },
   mounted: function() {
@@ -80,6 +91,12 @@ export default {
 <style lang="scss" scoped>
 .entry-container {
   width: 170vw;
+}
+#logo-container {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  color: #11a59c;
 }
 </style>
 

@@ -2,19 +2,30 @@
   <div>
     <el-row type="flex" align="middle" style="margin: 0 0 30px;">
       <el-button
+        :disabled="loading"
         v-if="pixiStatus==='pause'"
         icon="iconfont icon-play"
         type="text"
         @click="startPixi"
       ></el-button>
-      <el-button v-if="pixiStatus==='play'" icon="iconfont icon-stop" type="text" @click="stopPixi"></el-button>
-      <el-slider
-        style="width:100%;margin-left:20px;"
+      <el-button
+        :disabled="loading"
+        v-if="pixiStatus==='play'"
+        icon="iconfont icon-stop"
+        type="text"
+        @click="stopPixi"
+      ></el-button>
+      <vue-slider
+        style="margin-left:20px;width:100%"
+        tooltip="none"
+        :disabled="loading"
         v-model="ecgIndex"
         :max="recordTime*250-1"
-        :format-tooltip="formatTooltip"
         @change="handleSlider"
-      ></el-slider>
+        :processStyle="{backgroundColor: '#11A59C'}"
+        :dotStyle="{borderColor: '#11A59C'}"
+        :railStyle="{cursor:'pointer'}"
+      ></vue-slider>
     </el-row>
     <div id="pixi-container" v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.6)">
       <div id="timer">{{formatTime}}</div>
@@ -24,9 +35,14 @@
 
 <script>
 import fakeData from "./ecgdata";
+import VueSlider from "vue-slider-component";
+import "vue-slider-component/theme/antd.css";
 
 export default {
   name: "ECG",
+  components: {
+    VueSlider
+  },
   data() {
     return {
       param: {
@@ -100,6 +116,17 @@ export default {
     };
   },
   mounted() {
+    this.labelMapArr[-1] = {
+      label: "?",
+      style: {
+        fill: ["#63cc4d", "#3cbf42", "#40ff5c"],
+        fillGradientStops: [0.1],
+        fontFamily: "Tahoma",
+        miterLimit: "",
+        stroke: "#319340",
+        strokeThickness: 2
+      }
+    };
     this.$nextTick(function() {
       const parent = document.getElementById("pixi-container");
       this.param.width = parent.clientWidth;
@@ -168,9 +195,9 @@ export default {
       this.drawData(this.pixiApp);
       this.updatePixi();
     },
-    formatTooltip(val) {
-      return val;
-    },
+    // formatTooltip(val) {
+    //   return this.formatTime;
+    // },
     startPixi() {
       if (this.time >= this.recordTime) this.time = 0;
       this.pixiApp.ticker.start();
@@ -231,10 +258,6 @@ export default {
         this.labelContainer.addChild(labelText);
       });
     },
-    randomBase() {
-      const { d } = this.param;
-      return (Math.random() * d) / 5;
-    },
     drawGrid(app) {
       const {
         width,
@@ -249,7 +272,7 @@ export default {
 
       let line = new PIXI.Graphics();
 
-      /*绘制竖行网格*/
+      /*渲染 ecg grid 直線*/
       for (let i = 0; i <= width / d; i++) {
         if (i % 5 === 0) {
           line.lineStyle(1, 0x00ff00, 0.8);
@@ -260,7 +283,7 @@ export default {
         line.lineTo(i * d + offsetx, height - offsety);
         app.stage.addChild(line);
       }
-      /*渲染心電圖表格*/
+      /*渲染 ecg grid 橫線*/
       for (let j = 0; j <= height / d; j++) {
         if (j % 5 === 0) {
           line.lineStyle(1, 0x00ff00, 0.8);
@@ -327,10 +350,6 @@ export default {
 #pixi-container {
   position: relative;
   height: 450px;
-  cursor: move;
-  cursor: -webkit-grab;
-  cursor: -moz-grab;
-  cursor: grab;
 }
 #timer {
   position: absolute;
