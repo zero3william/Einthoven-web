@@ -56,7 +56,10 @@ export default {
         data_x: 0, //ecgData x
         data_y: 700, //ecgData y
         hidden_left: 0,
-        hidden_right: 0
+        hidden_right: 0,
+        grid_color: 0x00ff00,
+        data_color: 0xffff00,
+        timePivot_color: 0xff0000
       },
       ecgData: {},
       ecgIndex: 0,
@@ -132,6 +135,7 @@ export default {
       this.param.width = parent.clientWidth;
       this.param.height = parent.clientHeight;
       this.param.data_x = parseInt(parent.clientWidth / 100) * 50 + 50;
+      this.param.data_y = 700; //Todo , 計算適當的位置
       this.param.hidden_left =
         this.param.data_x - this.param.ref_x - 8 * this.param.d;
       this.param.hidden_right = this.param.data_x * 2;
@@ -165,28 +169,39 @@ export default {
       //////fake end
 
       this.loading = true;
-      this.asyncData({ interval: 3600 }).then(resp => {
-        this.loading = false;
-        this.recordTime = resp.data.data.ecg.length / 250;
-        this.ecgData = resp.data.data;
-        this.ecgLine = new PIXI.Graphics();
-        this.labelContainer = new PIXI.Container();
-        this.pixiApp.stage.addChild(this.labelContainer);
+      this.asyncData({ interval: 3600 })
+        .then(resp => {
+          this.recordTime = resp.data.data.ecg.length / 250;
+          this.ecgData = resp.data.data;
+          this.ecgLine = new PIXI.Graphics();
+          this.labelContainer = new PIXI.Container();
+          this.pixiApp.stage.addChild(this.labelContainer);
 
-        this.drawData(this.pixiApp);
-        this.pixiApp.ticker.update();
+          this.drawData(this.pixiApp);
+          this.pixiApp.ticker.update();
 
-        const vue = this;
-        this.pixiApp.ticker.add(function(delta) {
-          vue.time += delta / 60;
-          if (vue.time > vue.recordTime) vue.time = vue.recordTime;
-          vue.ecgLine.clear();
-          vue.labelContainer.removeChildren();
-          vue.drawData(vue.pixiApp);
+          const vue = this;
+          this.pixiApp.ticker.add(function(delta) {
+            vue.time += delta / 60;
+            if (vue.time > vue.recordTime) vue.time = vue.recordTime;
+            vue.ecgLine.clear();
+            vue.labelContainer.removeChildren();
+            vue.drawData(vue.pixiApp);
+          });
+          this.stopPixi();
+          this.loading = false;
+        })
+        .catch(err => {
+          this.$message({
+            type: "danger",
+            message: err
+          });
+          this.loading = false;
         });
-        this.stopPixi();
-      });
     });
+  },
+  destroyed() {
+    this.pixiApp.destroy();
   },
   methods: {
     handleSlider(val) {
@@ -221,12 +236,13 @@ export default {
         ref_x,
         d,
         hidden_left,
-        hidden_right
+        hidden_right,
+        data_color
       } = this.param;
       const { ecg, peak } = this.ecgData;
       const line = this.ecgLine;
 
-      line.lineStyle(2, 0x00ff00, 1); //ecgLine style (width,color,opacity)
+      line.lineStyle(2, data_color, 1); //ecgLine style (width,color,opacity)
 
       this.ecgIndex = parseInt(this.time * 250);
       if (this.ecgIndex >= ecg.length) this.stopPixi();
@@ -238,9 +254,9 @@ export default {
       const start_x = data_x - Math.min(hidden_left, this.ecgIndex);
 
       //渲染ecgLine
-      line.moveTo(start_x, data_y - subArray[0] * 100);
+      line.moveTo(start_x, data_y - subArray[0] * 10 * d);
       subArray.forEach((item, index) => {
-        line.lineTo(start_x + (index * d) / 10, data_y - item * 100);
+        line.lineTo(start_x + (index * d) / 10, data_y - item * 10 * d);
       });
       app.stage.addChild(line);
 
@@ -267,7 +283,10 @@ export default {
         d,
         ref_x,
         ref_y,
-        data_x
+        data_x,
+        timePivot_color,
+        grid_color,
+        data_color
       } = this.param;
 
       let line = new PIXI.Graphics();
@@ -275,9 +294,9 @@ export default {
       /*渲染 ecg grid 直線*/
       for (let i = 0; i <= width / d; i++) {
         if (i % 5 === 0) {
-          line.lineStyle(1, 0x00ff00, 0.8);
+          line.lineStyle(1, grid_color, 0.6);
         } else {
-          line.lineStyle(1, 0x00ff00, 0.4);
+          line.lineStyle(1, grid_color, 0.3);
         }
         line.moveTo(i * d + offsetx, offsety);
         line.lineTo(i * d + offsetx, height - offsety);
@@ -286,9 +305,9 @@ export default {
       /*渲染 ecg grid 橫線*/
       for (let j = 0; j <= height / d; j++) {
         if (j % 5 === 0) {
-          line.lineStyle(1, 0x00ff00, 0.8);
+          line.lineStyle(1, grid_color, 0.6);
         } else {
-          line.lineStyle(1, 0x00ff00, 0.4);
+          line.lineStyle(1, grid_color, 0.3);
         }
         line.moveTo(offsetx, j * d + offsety);
         line.lineTo(width + offsetx, j * d + offsety);
@@ -318,7 +337,7 @@ export default {
       richText.position.set(0, 0);
       app.stage.addChild(richText);
       /*渲染1mv參考波 reference pulse*/
-      line.lineStyle(2, 0x00ff00, 1);
+      line.lineStyle(2, data_color, 1);
       line.moveTo(ref_x, ref_y);
       line.lineTo(ref_x + d, ref_y);
       line.lineTo(ref_x + d, ref_y - 10 * d);
@@ -327,7 +346,7 @@ export default {
       line.lineTo(ref_x + 7 * d, ref_y);
       app.stage.addChild(line);
       /*渲染時間參考線*/
-      line.lineStyle(2, 0xff0000, 1);
+      line.lineStyle(2, timePivot_color, 0.6);
       line.moveTo(data_x, 0);
       line.lineTo(data_x, height);
       app.stage.addChild(line);

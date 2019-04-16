@@ -2,7 +2,9 @@
   <div id="root-container" v-if="isLogin">
     <Header id="header"/>
     <Sidebar id="sidebar"/>
-    <nuxt id="main"/>
+    <div style="flex-grow:1;overflow:auto;">
+      <nuxt id="main"/>
+    </div>
   </div>
 </template>
 <script>
@@ -61,8 +63,6 @@ $mainMinWidth: $screenMinWidth - $sidebarMinWidth;
   }
   #main {
     min-width: $mainMinWidth;
-    flex-grow: 1;
-    overflow: auto;
     margin-top: 56px;
     padding: 16px;
   }

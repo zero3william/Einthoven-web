@@ -24,14 +24,14 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapMutations } from 'vuex';
 
 export default {
-  name: "Sidebar",
+  name: 'Sidebar',
   methods: {
     handleLogout() {
-      this.$store.commit("LOGOUT");
-      this.$router.push({ path: "login", query: { test: "hello" } });
+      this.$store.commit('LOGOUT');
+      this.$router.push({ path: 'login', query: { test: 'hello' } });
     }
   }
 };

@@ -1,8 +1,14 @@
 <template>
-  <el-form class="login-form-container text-center" :model="ruleForm" :rules="rules" ref="ruleForm">
+  <el-form class="login-form-container text-center" :model="ruleForm" ref="ruleForm">
     <h2 class="primary-text">{{$t('signInFormTitle')}}</h2>
     <AutoCompleteBlocker/>
-    <el-form-item prop="email">
+    <el-form-item
+      prop="email"
+      :rules="[
+      { required: true, message: $t('pleaseEnterEmail'), trigger: 'blur' },
+      { type: 'email', message: $t('pleaseEnterValidEmail'), trigger: ['blur', 'change'] }
+    ]"
+    >
       <el-input
         :placeholder="$t('account')"
         prefix-icon="iconfont icon-user"
@@ -10,7 +16,22 @@
         autocomplete="off"
       ></el-input>
     </el-form-item>
-    <el-form-item prop="password">
+    <el-form-item
+      prop="password"
+      :rules="[
+          {
+            required: true,
+            message: $t('pleaseEnterPassword'),
+            trigger: 'change'
+          },
+          {
+            min: 8,
+            max: 16,
+            message: $t('wrongPasswordFormat'),
+            trigger: 'blur'
+          }
+        ]"
+    >
       <el-input
         type="password"
         :placeholder="$t('password')"
@@ -40,24 +61,6 @@ export default {
       ruleForm: {
         email: "",
         password: ""
-      },
-      rules: {
-        email: [
-          { required: true, message: "Please Enter the Email", trigger: "blur" }
-        ],
-        password: [
-          {
-            required: true,
-            message: "Please Enter the Password",
-            trigger: "change"
-          },
-          {
-            min: 8,
-            max: 16,
-            message: "Should be 8 - 16 words",
-            trigger: "blur"
-          }
-        ]
       }
     };
   },

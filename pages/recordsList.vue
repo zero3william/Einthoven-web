@@ -72,7 +72,6 @@
           <ECG/>
         </el-tab-pane>
         <el-tab-pane label="Heart Rate">Todo</el-tab-pane>
-        <el-tab-pane label="Temperature">Todo</el-tab-pane>
       </el-tabs>
     </el-dialog>
   </div>

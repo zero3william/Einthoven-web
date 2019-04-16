@@ -52,7 +52,13 @@ const lang = {
   slogan: ["Leading new concept of health , advocating modern and healthy lifestyle , and improve life quality", "引領健康新理念，給您高品質的健康管理服務"],
 
   signInFormTitle: ['SIGN IN TO EINTHOVEN', '登入愛多芬健康管理系統'],
-  signUpFormTitle: ['CREATE ACCOUNT', "創建帳戶"]
+  signUpFormTitle: ['CREATE ACCOUNT', "創建帳戶"],
+
+  pleaseEnterEmail: ['Please Enter the Email', '請輸入您的電子信箱'],
+  pleaseEnterPassword: ['Please Enter the Password', '請輸入您的密碼'],
+  pleaseEnterValidEmail: ['Email is not a valid email', '錯誤的電子信箱格式'],
+  wrongPasswordFormat: ['Must be 8 ~ 16 characters', '請輸入 8~16 個字母']
+
 };
 
 const output = {}
