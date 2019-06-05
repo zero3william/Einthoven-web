@@ -1,5 +1,4 @@
-import pkg from "./package";
-
+const webpack = require('webpack')
 export default {
   mode: "spa",
   head: {
@@ -26,9 +25,6 @@ export default {
       href: "https://fonts.googleapis.com/css?family=Italianno"
     }]
   },
-  /*
-   ** Customize the progress-bar color
-   */
   loading: {
     color: "#87CCC2"
   },
@@ -36,27 +32,20 @@ export default {
   plugins: ["@/plugins/element-ui", '@/plugins/anime', {
     src: '@/plugins/pixi',
     ssr: false
-  }, "@/plugins/i18n", "@/plugins/axios"],
+  }, "@/plugins/i18n", "@/plugins/axios", "@/plugins/croppa"],
   modules: [
-    "@nuxtjs/axios",
-    "@nuxtjs/pwa"
+    "@nuxtjs/axios"
   ],
-  /*
-   ** Axios module configuration
-   */
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
   },
-
-  /*
-   ** Build configuration
-   */
   build: {
     transpile: [/^element-ui/],
-
-    /*
-     ** You can extend webpack config here
-     */
+    plugins: [
+      new webpack.ProvidePlugin({
+        'EXIF': 'exif-js'
+      })
+    ],
     extend(config, ctx) {}
   }
 };

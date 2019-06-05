@@ -20,28 +20,32 @@
         tooltip="none"
         :disabled="loading"
         v-model="ecgIndex"
-        :max="recordTime*250-1"
+        :max="recordTime*250"
         @change="handleSlider"
-        :processStyle="{backgroundColor: '#11A59C'}"
-        :dotStyle="{borderColor: '#11A59C'}"
+        :processStyle="{backgroundColor: '#11A59C',transition: 'none'}"
+        :dotStyle="{borderColor: '#11A59C',display: 'none'}"
         :railStyle="{cursor:'pointer'}"
       ></vue-slider>
     </el-row>
     <div id="pixi-container" v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.6)">
       <div id="timer">{{formatTime}}</div>
     </div>
+    <div id="heart" class="heart"></div>
   </div>
 </template>
 
 <script>
-import fakeData from "./ecgdata";
-import VueSlider from "vue-slider-component";
-import "vue-slider-component/theme/antd.css";
+import fakeData from './ecgdata';
+import VueSlider from 'vue-slider-component';
+import 'vue-slider-component/theme/antd.css';
 
 export default {
-  name: "ECG",
+  name: 'ECG',
   components: {
     VueSlider
+  },
+  props: {
+    data: Object
   },
   data() {
     return {
@@ -61,52 +65,69 @@ export default {
         data_color: 0xffff00,
         timePivot_color: 0xff0000
       },
+      descTextStyle: {
+        fontFamily: 'Arial',
+        fontSize: 16,
+        fontStyle: 'italic',
+        fontWeight: 'bold',
+        fill: ['#ffffff', '#00ff99'], // gradient
+        stroke: '#4a1850',
+        strokeThickness: 5,
+        dropShadow: true,
+        dropShadowColor: '#000000',
+        dropShadowBlur: 4,
+        dropShadowAngle: Math.PI / 6,
+        dropShadowDistance: 6,
+        wordWrap: true,
+        wordWrapWidth: 440
+      },
       ecgData: {},
+      bpmData: [],
       ecgIndex: 0,
       ecgLine: null,
       labelContainer: null,
       labelMapArr: [
         {
-          label: "N",
+          label: 'N',
           style: {
-            fill: ["#63cc4d", "#3cbf42", "#40ff5c"],
+            fill: ['#63cc4d', '#3cbf42', '#40ff5c'],
             fillGradientStops: [0.1],
-            fontFamily: "Tahoma",
-            miterLimit: "",
-            stroke: "#319340",
+            fontFamily: 'Tahoma',
+            miterLimit: '',
+            stroke: '#319340',
             strokeThickness: 2
           }
         },
         {
-          label: "U",
+          label: 'U',
           style: {
-            fill: ["#ffe064", "#fc0"],
+            fill: ['#ffe064', '#fc0'],
             fillGradientStops: [0.1],
-            fontFamily: "Tahoma",
-            miterLimit: "",
-            stroke: "#d0a700",
+            fontFamily: 'Tahoma',
+            miterLimit: '',
+            stroke: '#d0a700',
             strokeThickness: 2
           }
         },
         {
-          label: "V",
+          label: 'V',
           style: {
-            fill: ["white", "#fb0006", "#ff4045"],
+            fill: ['white', '#fb0006', '#ff4045'],
             fillGradientStops: [0.1],
-            fontFamily: "Tahoma",
-            miterLimit: "",
-            stroke: "#d9404b",
+            fontFamily: 'Tahoma',
+            miterLimit: '',
+            stroke: '#d9404b',
             strokeThickness: 2
           }
         },
         {
-          label: "S",
+          label: 'S',
           style: {
-            fill: ["white", "#fb0006", "#ff4045"],
+            fill: ['white', '#fb0006', '#ff4045'],
             fillGradientStops: [0.1],
-            fontFamily: "Tahoma",
-            miterLimit: "",
-            stroke: "#d9404b",
+            fontFamily: 'Tahoma',
+            miterLimit: '',
+            stroke: '#d9404b',
             strokeThickness: 2
           }
         }
@@ -114,24 +135,24 @@ export default {
       time: 0,
       recordTime: 60,
       pixiApp: null,
-      pixiStatus: "pause",
+      pixiStatus: 'pause',
       loading: true
     };
   },
   mounted() {
     this.labelMapArr[-1] = {
-      label: "?",
+      label: '?',
       style: {
-        fill: ["#63cc4d", "#3cbf42", "#40ff5c"],
+        fill: ['#63cc4d', '#3cbf42', '#40ff5c'],
         fillGradientStops: [0.1],
-        fontFamily: "Tahoma",
-        miterLimit: "",
-        stroke: "#319340",
+        fontFamily: 'Tahoma',
+        miterLimit: '',
+        stroke: '#319340',
         strokeThickness: 2
       }
     };
     this.$nextTick(function() {
-      const parent = document.getElementById("pixi-container");
+      const parent = document.getElementById('pixi-container');
       this.param.width = parent.clientWidth;
       this.param.height = parent.clientHeight;
       this.param.data_x = parseInt(parent.clientWidth / 100) * 50 + 50;
@@ -139,61 +160,53 @@ export default {
       this.param.hidden_left =
         this.param.data_x - this.param.ref_x - 8 * this.param.d;
       this.param.hidden_right = this.param.data_x * 2;
-      document.getElementById("timer").style.left =
-        this.param.data_x - 4 + "px";
+      document.getElementById('timer').style.left =
+        this.param.data_x - 4 + 'px';
 
       this.pixiApp = new PIXI.Application({
         width: this.param.width,
         height: this.param.height,
         antialias: true
       });
-      document.getElementById("pixi-container").appendChild(this.pixiApp.view);
+      document.getElementById('pixi-container').appendChild(this.pixiApp.view);
 
       this.drawGrid(this.pixiApp);
+      this.loading = true;
 
       //////fake start
-      // this.ecgData = fakeData.data;
-      // this.ecgLine = new PIXI.Graphics();
-      // this.labelContainer = new PIXI.Container();
-      // app.stage.addChild(this.labelContainer);
-      // this.drawData(app);
-      // const vue = this;
-      // app.ticker.add(function(delta) {
-      //   vue.time += delta / 60;
-      //   if(vue.time > vue.recordTime) vue.time = vue.recordTime;
-      //   vue.ecgLine.clear();
-      //   vue.labelContainer.removeChildren();
-      //   vue.drawData(app);
-      // });
-      // this.stopPixi();
+      this.ecgData = fakeData.data;
+      this.initPixi();
       //////fake end
 
-      this.loading = true;
-      this.asyncData({ interval: 3600 })
+      // this.$api
+      //   .ecg(this.data.dataId, {
+      //     startTime: this.data.startTime,
+      //     interval: this.data.runningTime
+      //   })
+      //   .then(resp => {
+      //     this.recordTime = resp.ecg.length / 250;
+      //     this.ecgData = resp;
+      //     this.initPixi();
+      //   })
+      //   .catch(err => {
+      //     this.$message({
+      //       type: 'error',
+      //       message: err
+      //     });
+      //     this.loading = false;
+      //   });
+
+      this.$api
+        .heartrate(this.data.dataId, {
+          startTime: this.data.startTime,
+          times: Math.floor(this.data.runningTime / 3) + 1
+        })
         .then(resp => {
-          this.recordTime = resp.data.data.ecg.length / 250;
-          this.ecgData = resp.data.data;
-          this.ecgLine = new PIXI.Graphics();
-          this.labelContainer = new PIXI.Container();
-          this.pixiApp.stage.addChild(this.labelContainer);
-
-          this.drawData(this.pixiApp);
-          this.pixiApp.ticker.update();
-
-          const vue = this;
-          this.pixiApp.ticker.add(function(delta) {
-            vue.time += delta / 60;
-            if (vue.time > vue.recordTime) vue.time = vue.recordTime;
-            vue.ecgLine.clear();
-            vue.labelContainer.removeChildren();
-            vue.drawData(vue.pixiApp);
-          });
-          this.stopPixi();
-          this.loading = false;
+          this.bpmData = resp;
         })
         .catch(err => {
           this.$message({
-            type: "danger",
+            type: 'error',
             message: err
           });
           this.loading = false;
@@ -213,24 +226,41 @@ export default {
     // formatTooltip(val) {
     //   return this.formatTime;
     // },
+    initPixi() {
+      this.ecgLine = new PIXI.Graphics();
+      this.labelContainer = new PIXI.Container();
+      this.pixiApp.stage.addChild(this.labelContainer);
+      this.bpmContainer = new PIXI.Container();
+      this.pixiApp.stage.addChild(this.bpmContainer);
+      this.drawData(this.pixiApp);
+      this.pixiApp.ticker.update();
+      const vue = this;
+      this.pixiApp.ticker.add(function(delta) {
+        vue.time += delta / 60;
+        if (vue.time > vue.recordTime) vue.time = vue.recordTime;
+        vue.ecgLine.clear();
+        vue.labelContainer.removeChildren();
+        vue.bpmContainer.removeChildren();
+        vue.drawData(vue.pixiApp);
+      });
+      this.loading = false;
+      this.stopPixi();
+    },
     startPixi() {
       if (this.time >= this.recordTime) this.time = 0;
       this.pixiApp.ticker.start();
-      this.pixiStatus = "play";
+      this.pixiStatus = 'play';
     },
     stopPixi() {
       this.pixiApp.ticker.stop();
-      this.pixiStatus = "pause";
+      this.pixiStatus = 'pause';
     },
     updatePixi() {
       this.pixiApp.ticker.update();
     },
-    asyncData(payload) {
-      let data = this.$api.post("/Data/RetrieveECG", payload);
-      return data;
-    },
     drawData(app) {
       const {
+        height,
         data_x,
         data_y,
         ref_x,
@@ -240,6 +270,7 @@ export default {
         data_color
       } = this.param;
       const { ecg, peak } = this.ecgData;
+      const bpmArr = this.bpmData;
       const line = this.ecgLine;
 
       line.lineStyle(2, data_color, 1); //ecgLine style (width,color,opacity)
@@ -273,6 +304,35 @@ export default {
         labelText.y = d;
         this.labelContainer.addChild(labelText);
       });
+
+      // 渲染bpm
+      const bpmText = new PIXI.Text(`BPM`, this.descTextStyle);
+      bpmText.x = 46;
+      bpmText.y = height - 30;
+      this.bpmContainer.addChild(bpmText);
+      const bpmText2 = new PIXI.Text(
+        this.bpmData[Math.floor(this.time / 3)] === 0
+          ? '???'
+          : this.bpmData[Math.floor(this.time / 3)],
+        this.descTextStyle
+      );
+      bpmText2.x = 90;
+      bpmText2.y = height - 30;
+      this.bpmContainer.addChild(bpmText2);
+
+      //心跳動畫速率
+      if (this.bpmData[Math.floor(this.time / 3)] === 0) {
+        document.getElementById('heart').style.WebkitAnimation = 'none';
+        document.getElementById('heart').style.animation = 'none';
+      } else {
+        const onePeriod = 60 / this.bpmData[Math.floor(this.time / 3)];
+        document.getElementById(
+          'heart'
+        ).style.WebkitAnimation = `heartbeat ${onePeriod}s infinite`;
+        document.getElementById(
+          'heart'
+        ).style.animation = `heartbeat ${onePeriod}s infinite`;
+      }
     },
     drawGrid(app) {
       const {
@@ -314,26 +374,11 @@ export default {
         app.stage.addChild(line);
       }
       /*渲染XY軸說明*/
-      let style = new PIXI.TextStyle({
-        fontFamily: "Arial",
-        fontSize: 16,
-        fontStyle: "italic",
-        fontWeight: "bold",
-        fill: ["#ffffff", "#00ff99"], // gradient
-        stroke: "#4a1850",
-        strokeThickness: 5,
-        dropShadow: true,
-        dropShadowColor: "#000000",
-        dropShadowBlur: 4,
-        dropShadowAngle: Math.PI / 6,
-        dropShadowDistance: 6,
-        wordWrap: true,
-        wordWrapWidth: 440
-      });
-      let richText = new PIXI.Text("25mm/s", style);
+      let style = new PIXI.TextStyle(this.descTextStyle);
+      let richText = new PIXI.Text('25mm/s', style);
       richText.position.set(width - 70, height - 26);
       app.stage.addChild(richText);
-      richText = new PIXI.Text("10mm/mv", style);
+      richText = new PIXI.Text('10mm/mv', style);
       richText.position.set(0, 0);
       app.stage.addChild(richText);
       /*渲染1mv參考波 reference pulse*/
@@ -358,7 +403,7 @@ export default {
       min = min > 9 ? min : `0${min}`;
       let sec = Math.floor(this.time % 60);
       sec = sec > 9 ? sec : `0${sec}`;
-      let csec = this.time.toFixed(2).split(".");
+      let csec = this.time.toFixed(2).split('.');
       return `${min}:${sec}:${csec[1]}`;
     }
   }
@@ -379,5 +424,34 @@ export default {
   font-size: 30px;
   font-weight: bold;
   font-family: digital;
+}
+
+$heartSize: 18px;
+.heart {
+  /* Safari 和 Chrome */
+  width: $heartSize - 2px;
+  height: $heartSize - 2px;
+  background: #f00;
+  position: relative;
+  filter: drop-shadow(0px 0px 2px rgb(255, 20, 20));
+  transform: rotate(45deg);
+  left: 18px;
+  top: -26px;
+}
+.heart:before,
+.heart:after {
+  content: '';
+  position: absolute;
+  width: $heartSize;
+  height: $heartSize;
+  background: #f00;
+  border-radius: 100px;
+}
+.heart:before {
+  left: $heartSize/-2;
+}
+.heart:after {
+  left: 0;
+  top: $heartSize/-2;
 }
 </style>

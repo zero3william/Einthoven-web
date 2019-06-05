@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: "AutoCompleteBlocker"
+  name: 'AutoCompleteBlocker'
 };
 </script>
 

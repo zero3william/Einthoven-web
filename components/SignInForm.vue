@@ -5,8 +5,8 @@
     <el-form-item
       prop="email"
       :rules="[
-      { required: true, message: $t('pleaseEnterEmail'), trigger: 'blur' },
-      { type: 'email', message: $t('pleaseEnterValidEmail'), trigger: ['blur', 'change'] }
+      { required: true, message: $t('pleaseEnterEmail'), trigger: 'submit' },
+      { type: 'email', message: $t('pleaseEnterValidEmail'), trigger: 'blur' }
     ]"
     >
       <el-input
@@ -22,10 +22,10 @@
           {
             required: true,
             message: $t('pleaseEnterPassword'),
-            trigger: 'change'
+            trigger: 'submit'
           },
           {
-            min: 8,
+            min: 4,
             max: 16,
             message: $t('wrongPasswordFormat'),
             trigger: 'blur'
@@ -40,45 +40,45 @@
         autocomplete="off"
       ></el-input>
     </el-form-item>
-    <el-row type="flex" justify="space-between" align="middle">
-      <nuxt-link to="/login/recovery">{{$t('forgetPassword')}}</nuxt-link>
+    <el-row type="flex" justify="center" align="middle">
       <el-button round type="primary" @click="submitForm('ruleForm')">{{$t('entryNavBtn2')}}</el-button>
     </el-row>
   </el-form>
 </template>
 
 <script>
-import { mapMutations } from "vuex";
-import AutoCompleteBlocker from "./AutoCompleteBlocker";
+import { mapMutations } from 'vuex';
+import AutoCompleteBlocker from './AutoCompleteBlocker';
 
 export default {
-  name: "LoginForm",
+  name: 'LoginForm',
   components: {
     AutoCompleteBlocker
   },
   data() {
     return {
       ruleForm: {
-        email: "",
-        password: ""
-      }
+        email: 'zero3william@gmail.com',
+        password: '1234'
+      },
+      usersystem: null
     };
   },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          const payload = this.$store.commit("LOGIN", this.payload);
-          this.$router.push({ path: "recordsList" });
+          this.$api.login(this.ruleForm).then(data => {
+            this.$store.commit('LOGIN_SUCCESS', {
+              email: this.ruleForm.email,
+              ...data
+            });
+            this.$router.push({ path: '/' });
+          });
         } else {
           return false;
         }
       });
-    }
-  },
-  computed: {
-    payload() {
-      return this.ruleForm;
     }
   }
 };

@@ -1,49 +1,40 @@
 <template>
-  <header class="header-container">
-    <el-row type="flex" justify="space-between" align="middle">
-      <span style="margin-left:20px;">{{ nowTime }}</span>
-      <el-row type="flex" align="middle">
-        {{$store.state.userinfo ? $store.state.userinfo.email : ''}}
+  <el-row class="header-container" type="flex" justify="space-between" align="middle">
+    <span style="margin-left:20px;">{{ nowTime }}</span>
+    <el-row type="flex" align="middle">
+      <span>{{$store.state.userinfo ? $store.state.userinfo.nickname : ''}}</span>
+      <div
+        id="header-avatar"
+        class="avatar"
+        :style="`background-image:url(${$store.state.userinfo ? $store.state.userinfo.avatar : ''})`"
+      >
         <img
-          src="/user32x32.png"
-          style="margin:0 20px;"
+          id="header-forEXIF"
+          :src="$store.state.userinfo ? $store.state.userinfo.avatar : ''"
+          style="display:none;"
         >
-        <LocaleSelector/>
-      </el-row>
+      </div>
+
+      <LocaleSelector/>
     </el-row>
-  </header>
+  </el-row>
 </template>
 
 <script>
-import LocaleSelector from "../components/LocaleSelector";
+import LocaleSelector from '../components/LocaleSelector';
+import DateFormat from '../utils/date';
 
 export default {
-  name: "Header",
+  name: 'Header',
   components: { LocaleSelector },
   data() {
     return {
-      nowTime: ""
+      nowTime: ''
     };
   },
   methods: {
     now() {
-      const _date = new Date();
-      const year = _date.getFullYear();
-      const month =
-        _date.getMonth() <= 9 ? `0${_date.getMonth()}` : _date.getMonth();
-      const date =
-        _date.getDate() <= 9 ? `0${_date.getDate()}` : _date.getDate();
-      const hour =
-        _date.getHours() <= 9 ? `0${_date.getHours()}` : _date.getHours();
-      const minute =
-        _date.getMinutes() <= 9 ? `0${_date.getMinutes()}` : _date.getMinutes();
-      const second =
-        _date.getSeconds() <= 9 ? `0${_date.getSeconds()}` : _date.getSeconds();
-      const timezone =
-        _date.getTimezoneOffset() / -60 >= 0
-          ? `+${_date.getTimezoneOffset() / -60}`
-          : `-${_date.getTimezoneOffset() / -60}`;
-      return `${year}-${month}-${date} ${hour}:${minute}:${second} (UTC${timezone})`;
+      return DateFormat(new Date(), 1);
     }
   },
   mounted() {
@@ -51,13 +42,55 @@ export default {
     setInterval(() => {
       this.nowTime = this.now();
     }, 1000);
+
+    const img = document.getElementById('header-forEXIF');
+
+    img.onload = function() {
+      EXIF.getData(this, function() {
+        let dom = document.getElementById('header-avatar');
+        switch (EXIF.getTag(this, 'Orientation')) {
+          case 1: // 水平(一般)
+            break;
+          case 2: // 水平鏡像
+            break;
+          case 3: // 翻轉180度
+            dom.style.transform = 'rotate(-180deg)';
+            break;
+          case 4: // 垂直鏡像
+            break;
+          case 5: // 水平鏡像後，順時鐘翻轉270度
+            break;
+          case 6: // 順時鐘翻轉270度
+            dom.style.transform = 'rotate(-270deg)';
+            break;
+          case 7: // 水平鏡像後，順時鐘翻轉90度
+            break;
+          case 8: // 順時鐘翻轉90度
+            dom.style.transform = 'rotate(-90deg)';
+            break;
+          default:
+            // 讀取 EXIF Orientation 錯誤
+            break;
+        }
+        dom.style.opacity = 1;
+      });
+    };
   }
 };
 </script>
 
 <style lang="scss" scoped>
-header {
-  padding: 10px;
+.header-container {
+  padding: 1rem 2rem;
   box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.2);
+  .avatar {
+    margin: 0 20px;
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    background-size: cover;
+    opacity: 0;
+    transition: all 0.7s;
+  }
 }
 </style>

@@ -4,7 +4,7 @@
       <div slot="header">
         <el-row type="flex" align="middle">
           <el-date-picker
-            v-model="filters.dateRange"
+            v-model="dateRange"
             type="daterange"
             unlink-panels
             range-separator="-"
@@ -12,6 +12,7 @@
             :end-placeholder="$t('to')"
             :picker-options="pickerOptions"
             :default-time="['00:00:00','23:59:59']"
+            value-format="timestamp"
           ></el-date-picker>
           <div class="percentFilter">
             <label>Label(S+V%)</label>
@@ -26,8 +27,18 @@
 
       <el-table :data="filteredTableData">
         <el-table-column type="index" width="50"></el-table-column>
-        <el-table-column align="center" prop="startTime" :label="$t('startTime')"></el-table-column>
-        <el-table-column align="center" prop="recordTime" :label="$t('recordTime')"></el-table-column>
+        <el-table-column
+          align="center"
+          prop="startTime"
+          :label="$t('startTime')"
+          :formatter="(row, column, cellValue, index) => formatDate(new Date(cellValue*1000))"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="runningTime"
+          :label="$t('recordTime')"
+          :formatter="(row, column, cellValue, index) => formatSec(cellValue)"
+        ></el-table-column>
         <el-table-column
           align="center"
           prop="labelSV"
@@ -67,34 +78,35 @@
       top="2%"
     >
       <div class="title">{{dialogTitle}}</div>
-      <el-tabs type="border-card">
-        <el-tab-pane label="ECG">
-          <ECG/>
-        </el-tab-pane>
+      <!-- <el-tabs type="border-card">
+      <el-tab-pane label="ECG">-->
+      <ECG :data="rowData"/>
+      <!-- </el-tab-pane>
         <el-tab-pane label="Heart Rate">Todo</el-tab-pane>
-      </el-tabs>
+      </el-tabs>-->
     </el-dialog>
   </div>
 </template>
 
 <script>
-import ECG from "../components/ECG";
+import ECG from '../components/ECG';
+import { format, hhmmss } from '../utils/date';
 
 export default {
   components: { ECG },
   data() {
     return {
       dialogVisible: false,
-      dialogTitle: "",
+      dialogTitle: '',
+      rowData: null,
       filters: {
-        dateRange: null,
-        labelSV: "",
-        labelU: ""
+        labelSV: '',
+        labelU: ''
       },
       pickerOptions: {
         shortcuts: [
           {
-            text: "最近一天",
+            text: '最近一天',
             onClick(picker) {
               const end = new Date();
               end.setHours(23);
@@ -102,11 +114,11 @@ export default {
               end.setSeconds(59);
               const start = new Date();
               start.setTime(end.getTime() - 3600 * 1000 * 24 * 2 + 1000);
-              picker.$emit("pick", [start, end]);
+              picker.$emit('pick', [start, end]);
             }
           },
           {
-            text: "最近一周",
+            text: '最近一周',
             onClick(picker) {
               const end = new Date();
               end.setHours(23);
@@ -114,11 +126,11 @@ export default {
               end.setSeconds(59);
               const start = new Date();
               start.setTime(end.getTime() - 3600 * 1000 * 24 * 8 + 1000);
-              picker.$emit("pick", [start, end]);
+              picker.$emit('pick', [start, end]);
             }
           },
           {
-            text: "最近一个月",
+            text: '最近一个月',
             onClick(picker) {
               const end = new Date();
               end.setHours(23);
@@ -126,11 +138,11 @@ export default {
               end.setSeconds(59);
               const start = new Date();
               start.setTime(end.getTime() - 3600 * 1000 * 24 * 31 + 1000);
-              picker.$emit("pick", [start, end]);
+              picker.$emit('pick', [start, end]);
             }
           },
           {
-            text: "最近三个月",
+            text: '最近三个月',
             onClick(picker) {
               const end = new Date();
               end.setHours(23);
@@ -138,79 +150,68 @@ export default {
               end.setSeconds(59);
               const start = new Date();
               start.setTime(end.getTime() - 3600 * 1000 * 24 * 91 + 1000);
-              picker.$emit("pick", [start, end]);
+              picker.$emit('pick', [start, end]);
             }
           }
         ]
       },
-      tableData: [
-        {
-          id: 1,
-          startTime: "2019-04-11 12:30:00",
-          recordTime: "xx:xx",
-          labelSV: 7,
-          labelU: 3
-        },
-        {
-          id: 2,
-          startTime: "2019-04-07 12:30:00",
-          recordTime: "xx:xx",
-          labelSV: 20,
-          labelU: 1
-        },
-        {
-          id: 3,
-          startTime: "2019-04-03 12:30:00",
-          recordTime: "xx:xx",
-          labelSV: 6,
-          labelU: 3
-        },
-        {
-          id: 4,
-          startTime: "2019-03-25 12:30:00",
-          recordTime: "xx:xx",
-          labelSV: 7,
-          labelU: 33
-        }
-      ]
+      dateRange: null,
+      tableData: []
     };
   },
   methods: {
+    formatDate(_date) {
+      return format(_date);
+    },
+    formatSec(sec) {
+      return hhmmss(sec);
+    },
     handleDelete(row, event) {
-      this.$confirm(this.$t("deleteMsg"), this.$t("tip"), {
-        confirmButtonText: this.$t("yes"),
-        cancelButtonText: this.$t("no"),
-        type: "warning"
+      this.$confirm(this.$t('deleteMsg'), this.$t('tip'), {
+        confirmButtonText: this.$t('yes'),
+        cancelButtonText: this.$t('no'),
+        type: 'warning'
       })
         .then(() => {
           this.tableData = this.tableData.filter(item => item.id !== row.id);
           this.$message({
-            type: "success",
-            message: this.$t("success")
+            type: 'success',
+            message: this.$t('success')
           });
         })
         .catch(() => {});
     },
     handleDetail(row, event) {
-      this.dialogTitle = `${this.$t("startTime")}: ${row.startTime}  ${this.$t(
-        "recordTime"
-      )}: ${row.recordTime}`;
+      this.dialogTitle = `${this.$t('startTime')}: ${format(
+        new Date(row.startTime * 1000)
+      )}  ${this.$t('recordTime')}: ${hhmmss(row.runningTime)}`;
+      this.rowData = row;
       this.dialogVisible = true;
     },
     formatNum(val) {
-      console.log(val);
       return 0;
     }
+  },
+  mounted() {
+    const end = new Date();
+    end.setHours(23);
+    end.setMinutes(59);
+    end.setSeconds(59);
+    const start = new Date();
+    start.setTime(end.getTime() - 3600 * 1000 * 24 * 365 + 1000);
+    this.dateRange = [start.getTime(), end.getTime()];
+    this.$api
+      .getDataList({
+        startDate: parseInt(this.dateRange[0] / 1000),
+        endDate: parseInt(this.dateRange[1] / 1000)
+      })
+      .then(resp => {
+        this.tableData = resp;
+      });
   },
   computed: {
     filteredTableData() {
       let filteredData = this.tableData.filter(item => {
-        if (this.filters.dateRange) {
-          let d = new Date(item.startTime);
-          if (d < this.filters.dateRange[0] || d > this.filters.dateRange[1])
-            return false;
-        }
-
         if (this.filters.labelSV) {
           if (parseInt(item.labelSV) < this.filters.labelSV) return false;
         }
@@ -230,24 +231,24 @@ export default {
         let numberPattern = /\d+/g;
         value.labelSV =
           value.labelSV.match(numberPattern) === null
-            ? ""
+            ? ''
             : value.labelSV.match(numberPattern)[0];
         if (parseInt(value.labelSV) >= 100) {
-          value.labelSV = "100";
+          value.labelSV = '100';
         }
         if (parseInt(value.labelSV) <= 0) {
-          value.labelSV = "";
+          value.labelSV = '';
         }
 
         value.labelU =
           value.labelU.match(numberPattern) === null
-            ? ""
+            ? ''
             : value.labelU.match(numberPattern)[0];
         if (parseInt(value.labelU) >= 100) {
-          value.labelU = "100";
+          value.labelU = '100';
         }
         if (parseInt(value.labelU) <= 0) {
-          value.labelU = "";
+          value.labelU = '';
         }
       },
       deep: true

@@ -21,7 +21,7 @@ const lang = {
   changePassword: ['Change Password', '修改密碼'],
   oldPassword: ['Old Password', '輸入舊密碼'],
   newPassword: ['New Password', '輸入新密碼'],
-  confirmPassword: ['Confirm Password', '確認密碼'],
+  confirmPassword: ['Confirm', '確認密碼'],
   forgetPassword: ['Forget Password ?', '忘記密碼 ?'],
 
   monitoringHistory: ['Monitoring History', '測量記錄'],

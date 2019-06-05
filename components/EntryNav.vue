@@ -1,33 +1,26 @@
 <template>
   <el-row type="flex" align="middle" justify="center" class="animate-block">
     <div>
-      <transition
-        mode="out-in"
-        enter-active-class="animated fadeIn"
-        leave-active-class="animated fadeOut"
-      >
-        <div v-if="ok">
+      <transition name="fade">
+        <div v-show="show">
           <h3>{{$t(title)}}</h3>
-          <p v-html="$t(desc)"></p>
+          <p v-html="$t(desc)" style="line-height:24px;"></p>
+          <el-button round class="button" @click="onClick">{{$t(btn)}}</el-button>
         </div>
       </transition>
-      <el-button round class="button" @click="onClick">{{$t(btn)}}</el-button>
     </div>
   </el-row>
 </template>
 
 <script>
-import anime from "animejs";
-
 export default {
-  name: "EntryNav",
+  name: 'EntryNav',
   data() {
     return {
-      ok: true
+      show: true
     };
   },
   props: {
-    page: String,
     title: String,
     desc: String,
     btn: String,
@@ -36,27 +29,30 @@ export default {
   methods: {
     onClick: function(event) {
       this.click();
-      const obj =
-        this.page === "signIn"
-          ? { paddingLeft: "70px" }
-          : { paddingRight: "70px" };
-      anime({
-        ...obj,
-        targets: ".animate-block .button",
-        direction: "alternate",
-        easing: "easeInOutSine",
-        duration: 360
-      });
-      this.ok = false;
+      this.show = false;
       setTimeout(() => {
-        this.ok = true;
-      }, 500);
+        this.show = true;
+      }, 200);
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.fade-enter {
+  opacity: 0;
+}
+.fade-enter-active {
+  transition: opacity 0.7s;
+}
+.fade-leave {
+  opacity: 1;
+}
+.fade-leave-active {
+  transition: opacity 0.2s;
+  opacity: 0;
+}
+
 .animate-block {
   background: radial-gradient(farthest-corner at 40px 40px, #207a94, #11a59c);
   width: 30vw;

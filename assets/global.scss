@@ -2,6 +2,41 @@
   box-sizing: border-box;
 }
 
+@media screen and (max-width: 1280px) {
+  html {
+    font-size: 11px !important;
+  }
+}
+
+@media screen and (min-width: 1281px) and (max-width: 1440px) {
+  html {
+    font-size: 12px !important;
+  }
+}
+
+@media screen and (min-width: 1441px) and (max-width: 1920px) {
+  html {
+    font-size: 13px !important;
+  }
+}
+
+body {
+  font-size: 1.6rem;
+  font-family: 'PT Sans', sans-serif !important;
+}
+
+.logo-font {
+  font-family: 'Monoton', cursive;
+  font-size: 23px;
+  padding-left: 6px;
+  line-height: 16px;
+}
+
+img {
+  display: block;
+  image-orientation: from-image;
+}
+
 .text-center {
   text-align: center;
 }
@@ -33,15 +68,50 @@
 }
 
 .iconfont {
-  font-size: 20px;
+  font-size: 2rem;
   margin: 0px 4px;
 }
 
 .el-input--prefix .el-input__inner {
-  padding-left: 34px !important;
+  padding-left: 3.4rem !important;
+}
+
+.editable {
+  .el-form-item__label {
+    line-height: 4rem;
+  }
+
+  .el-form-item__content {
+    .el-input {
+      .el-input__inner {
+        border: none;
+        border-bottom: 1px solid rgb(48, 39, 100);
+        border-radius: 0px;
+      }
+    }
+
+  }
+
 }
 
 @font-face {
   font-family: 'digital';
   src: url('./digital.ttf');
+}
+
+@keyframes heartbeat {
+  0% {
+    transform: rotate(45deg) scale(0.8, 0.8);
+    opacity: 1;
+  }
+
+  25% {
+    transform: rotate(45deg) scale(1, 1);
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: rotate(45deg) scale(0.8, 0.8);
+    opacity: 1;
+  }
 }

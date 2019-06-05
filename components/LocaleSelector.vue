@@ -20,10 +20,10 @@
 </template>
 
 <script>
-import { locales } from "../locales/lang";
+import { locales } from '../locales/lang';
 
 export default {
-  name: "LocaleSelector",
+  name: 'LocaleSelector',
   data() {
     return {
       locales: locales
@@ -31,13 +31,13 @@ export default {
   },
   methods: {
     changeLang(lang) {
-      this.$store.commit("SET_LANG", lang);
-      this.$i18n.locale = window.localStorage["lang"];
+      this.$store.commit('SET_LANG', lang);
+      this.$i18n.locale = window.localStorage['lang'];
     }
   },
   computed: {
     locale() {
-      const lang_icon = ["En", "中"];
+      const lang_icon = ['En', '中'];
       return lang_icon[locales.indexOf(this.$i18n.locale)];
     }
   }

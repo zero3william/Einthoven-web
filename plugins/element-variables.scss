@@ -115,17 +115,17 @@ $--fill-base: $--color-white !default;
 -------------------------- */
 $--font-path: "~element-ui/lib/theme-chalk/fonts" !default;
 /// fontSize|1|FontSize|0
-$--font-size-extra-large: 20px !default;
+$--font-size-extra-large: 2rem !default;
 /// fontSize|1|FontSize|0
-$--font-size-large: 18px !default;
+$--font-size-large: 1.8rem !default;
 /// fontSize|1|FontSize|0
-$--font-size-medium: 16px !default;
+$--font-size-medium: 1.6rem !default;
 /// fontSize|1|FontSize|0
-$--font-size-base: 14px !default;
+$--font-size-base: 1.4rem !default;
 /// fontSize|1|FontSize|0
-$--font-size-small: 13px !default;
+$--font-size-small: 1.3rem !default;
 /// fontSize|1|FontSize|0
-$--font-size-extra-small: 12px !default;
+$--font-size-extra-small: 1.2rem !default;
 /// fontWeight|1|FontWeight|1
 $--font-weight-primary: 500 !default;
 /// fontWeight|1|FontWeight|1
@@ -159,7 +159,7 @@ $--icon-color-base: $--color-info !default;
 /* Checkbox
 -------------------------- */
 /// fontSize||Font|1
-$--checkbox-font-size: 14px !default;
+$--checkbox-font-size: 1.4rem !default;
 /// fontWeight||Font|1
 $--checkbox-font-weight: $--font-weight-primary !default;
 /// color||Color|0
@@ -304,7 +304,7 @@ $--select-multiple-input-color: #666 !default;
 /// color||Color|0
 $--select-input-focus-border-color: $--color-primary !default;
 /// fontSize||Font|1
-$--select-input-font-size: 14px !default;
+$--select-input-font-size: 1.4rem !default;
 
 $--select-option-color: $--color-text-regular !default;
 $--select-option-disabled-color: $--color-text-placeholder !default;
@@ -319,7 +319,7 @@ $--select-option-selected-hover: $--background-color-base !default;
 $--select-group-color: $--color-info !default;
 /// height||Other|4
 $--select-group-height: 30px !default;
-$--select-group-font-size: 12px !default;
+$--select-group-font-size: 1.2rem !default;
 
 $--select-dropdown-background: $--color-white !default;
 $--select-dropdown-shadow: $--box-shadow-light !default;
@@ -335,10 +335,10 @@ $--select-dropdown-border: solid 1px $--border-color-light !default;
 -------------------------- */
 $--alert-padding: 8px 16px !default;
 $--alert-border-radius: $--border-radius-base !default;
-$--alert-title-font-size: 13px !default;
-$--alert-description-font-size: 12px !default;
-$--alert-close-font-size: 12px !default;
-$--alert-close-customed-font-size: 13px !default;
+$--alert-title-font-size: 1.3rem !default;
+$--alert-description-font-size: 1.2rem !default;
+$--alert-close-font-size: 1.2rem !default;
+$--alert-close-customed-font-size: 1.3rem !default;
 
 $--alert-success-color: $--color-success-lighter !default;
 $--alert-info-color: $--color-info-lighter !default;
@@ -355,7 +355,7 @@ $--msgbox-border-radius: 4px !default;
 $--msgbox-font-size: $--font-size-large !default;
 $--msgbox-content-font-size: $--font-size-base !default;
 $--msgbox-content-color: $--color-text-regular !default;
-$--msgbox-error-font-size: 12px !default;
+$--msgbox-error-font-size: 1.2rem !default;
 $--msgbox-padding-primary: 15px !default;
 
 $--msgbox-success-color: $--color-success !default;
@@ -391,7 +391,7 @@ $--notification-close-font-size: $--message-close-size !default;
 $--notification-group-margin: 13px !default;
 $--notification-font-size: $--font-size-base !default;
 $--notification-color: $--color-text-regular !default;
-$--notification-title-font-size: 16px !default;
+$--notification-title-font-size: 1.6rem !default;
 $--notification-title-color: $--color-text-primary !default;
 
 $--notification-close-color: $--color-text-secondary !default;
@@ -411,7 +411,7 @@ $--input-font-color: $--color-text-regular !default;
 /// height||Other|4
 $--input-width: 140px !default;
 /// height||Other|4
-$--input-height: 40px !default;
+$--input-height: 4rem !default;
 $--input-border: $--border-base !default;
 $--input-border-color: $--border-color-base !default;
 /// borderRadius||Border|2
@@ -439,15 +439,15 @@ $--input-disabled-color: $--disabled-color-base !default;
 $--input-disabled-placeholder-color: $--color-text-placeholder !default;
 
 /// fontSize||Font|1
-$--input-medium-font-size: 14px !default;
+$--input-medium-font-size: 1.4rem !default;
 /// height||Other|4
 $--input-medium-height: 36px !default;
 /// fontSize||Font|1
-$--input-small-font-size: 13px !default;
+$--input-small-font-size: 1.3rem !default;
 /// height||Other|4
 $--input-small-height: 32px !default;
 /// fontSize||Font|1
-$--input-mini-font-size: 12px !default;
+$--input-mini-font-size: 1.2rem !default;
 /// height||Other|4
 $--input-mini-height: 28px !default;
 
@@ -527,14 +527,14 @@ $--button-medium-padding-vertical: 10px !default;
 $--button-medium-padding-horizontal: 20px !default;
 
 /// fontSize||Font|1
-$--button-small-font-size: 12px !default;
+$--button-small-font-size: 1.2rem !default;
 $--button-small-border-radius: #{$--border-radius-base - 1} !default;
 /// padding||Spacing|3
 $--button-small-padding-vertical: 9px !default;
 /// padding||Spacing|3
 $--button-small-padding-horizontal: 15px !default;
 /// fontSize||Font|1
-$--button-mini-font-size: 12px !default;
+$--button-mini-font-size: 1.2rem !default;
 $--button-mini-border-radius: #{$--border-radius-base - 1} !default;
 /// padding||Spacing|3
 $--button-mini-padding-vertical: 7px !default;
@@ -619,7 +619,7 @@ $--dialog-background-color: $--color-primary-light-4 !default;
 $--dialog-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !default;
 $--dialog-close-hover-color: $--color-primary !default;
 $--dialog-title-font-size: $--font-size-large !default;
-$--dialog-font-size: 14px !default;
+$--dialog-font-size: 1.4rem !default;
 /// fontLineHeight|
 $--dialog-font-line-height: $--font-line-height-primary !default;
 $--dialog-padding-primary: 20px !default;
@@ -642,7 +642,7 @@ $--table-fixed-box-shadow: 0 0 10px rgba(0, 0, 0, .12) !default;
 
 /* Pagination
 -------------------------- */
-$--pagination-font-size: 13px !default;
+$--pagination-font-size: 1.3rem !default;
 $--pagination-fill: $--color-white !default;
 $--pagination-color: $--color-text-primary !default;
 $--pagination-border-radius: 3px !default;
@@ -662,14 +662,14 @@ $--popover-border-color: $--border-color-lighter !default;
 $--popover-arrow-size: 6px !default;
 $--popover-padding: 12px !default;
 $--popover-padding-large: 18px 20px !default;
-$--popover-title-font-size: 16px !default;
+$--popover-title-font-size: 1.6rem !default;
 $--popover-title-color: $--color-text-primary !default;
 
 /* Tooltip
 -------------------------- */
 $--tooltip-fill: $--color-text-primary !default;
 $--tooltip-color: $--color-white !default;
-$--tooltip-font-size: 12px !default;
+$--tooltip-font-size: 1.2rem !default;
 $--tooltip-border-color: $--color-text-primary !default;
 $--tooltip-arrow-size: 6px !default;
 $--tooltip-padding: 10px !default;
@@ -684,7 +684,7 @@ $--tag-font-color: $--color-primary !default;
 $--tag-background-color: $--color-primary !default;
 $--tag-border: rgba($--color-primary, 0.20) !default;
 /// fontSize||Font|1
-$--tag-font-size: 12px !default;
+$--tag-font-size: 1.2rem !default;
 $--tag-border-radius: 4px !default;
 
 $--tag-info-fill: rgba($--color-info, 0.10) !default;
@@ -726,7 +726,7 @@ $--dropdown-menuItem-hover-color: $--link-color !default;
 -------------------------- */
 $--badge-fill: $--color-danger !default;
 $--badge-radius: 10px !default;
-$--badge-font-size: 12px !default;
+$--badge-font-size: 1.2rem !default;
 $--badge-padding: 6px !default;
 $--badge-size: 18px !default;
 
@@ -817,7 +817,7 @@ $--scrollbar-hover-background-color: rgba($--color-text-secondary, .5) !default;
 
 /* Carousel
 --------------------------*/
-$--carousel-arrow-font-size: 12px !default;
+$--carousel-arrow-font-size: 1.2rem !default;
 $--carousel-arrow-size: 36px !default;
 $--carousel-arrow-background: rgba(31, 45, 61, 0.11) !default;
 $--carousel-arrow-hover-background: rgba(31, 45, 61, 0.23) !default;
@@ -884,22 +884,22 @@ $--lg: 1200px !default;
 $--xl: 1920px !default;
 
 $--breakpoints: ('xs' : (max-width: $--sm - 1),
-'sm' : (min-width: $--sm),
-'md' : (min-width: $--md),
-'lg' : (min-width: $--lg),
-'xl' : (min-width: $--xl));
+  'sm' : (min-width: $--sm),
+  'md' : (min-width: $--md),
+  'lg' : (min-width: $--lg),
+  'xl' : (min-width: $--xl));
 
 $--breakpoints-spec: ('xs-only' : (max-width: $--sm - 1),
-'sm-and-up' : (min-width: $--sm),
-'sm-only': "(min-width: #{$--sm}) and (max-width: #{$--md - 1})",
-'sm-and-down': (max-width: $--md - 1),
-'md-and-up' : (min-width: $--md),
-'md-only': "(min-width: #{$--md}) and (max-width: #{$--lg - 1})",
-'md-and-down': (max-width: $--lg - 1),
-'lg-and-up' : (min-width: $--lg),
-'lg-only': "(min-width: #{$--lg}) and (max-width: #{$--xl - 1})",
-'lg-and-down': (max-width: $--xl - 1),
-'xl-only' : (min-width: $--xl),
+  'sm-and-up' : (min-width: $--sm),
+  'sm-only': "(min-width: #{$--sm}) and (max-width: #{$--md - 1})",
+  'sm-and-down': (max-width: $--md - 1),
+  'md-and-up' : (min-width: $--md),
+  'md-only': "(min-width: #{$--md}) and (max-width: #{$--lg - 1})",
+  'md-and-down': (max-width: $--lg - 1),
+  'lg-and-up' : (min-width: $--lg),
+  'lg-only': "(min-width: #{$--lg}) and (max-width: #{$--xl - 1})",
+  'lg-and-down': (max-width: $--xl - 1),
+  'xl-only' : (min-width: $--xl),
 );
 
 @import "~element-ui/packages/theme-chalk/src/index";

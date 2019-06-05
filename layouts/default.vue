@@ -8,8 +8,8 @@
   </div>
 </template>
 <script>
-import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
+import Header from '../components/Header';
+import Sidebar from '../components/Sidebar';
 
 export default {
   components: { Header, Sidebar },
@@ -21,13 +21,20 @@ export default {
   methods: {
     checkLogin() {
       if (!this.$store.state.userinfo) {
-        this.$router.push("/login");
+        this.$router.push('/login');
         this.$message({
-          type: "warning",
-          message: this.$t("pleaseLogin")
+          type: 'warning',
+          message: this.$t('pleaseLogin')
         });
       } else {
-        this.isLogin = true;
+        this.$api
+          .getUser(this.$store.state.userinfo.userId)
+          .then(resp => {
+            this.isLogin = true;
+          })
+          .catch(err => {
+            this.$router.push('/login');
+          });
       }
     }
   },
@@ -38,8 +45,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 $screenMinWidth: 1080px;
-$sidebarMinWidth: 200px;
+$sidebarMinWidth: 240px;
 $mainMinWidth: $screenMinWidth - $sidebarMinWidth;
+$headerHeight: 5.2rem;
 
 #root-container {
   height: 100vh;
@@ -48,11 +56,13 @@ $mainMinWidth: $screenMinWidth - $sidebarMinWidth;
   overflow: hidden;
   display: flex;
   #header {
+    background: #fff;
     width: calc(100vw - #{$sidebarMinWidth});
     position: absolute;
-    z-index: 1;
+    z-index: 1000;
     top: 0;
     left: $sidebarMinWidth;
+    height: $headerHeight;
   }
   #sidebar {
     width: $sidebarMinWidth;
@@ -62,8 +72,10 @@ $mainMinWidth: $screenMinWidth - $sidebarMinWidth;
     background: linear-gradient(#2e8da7 10%, #11a59c 70%);
   }
   #main {
+    background: #fdfdfd;
     min-width: $mainMinWidth;
-    margin-top: 56px;
+    margin-top: $headerHeight;
+    height: calc(100vh - #{$headerHeight});
     padding: 16px;
   }
 }
