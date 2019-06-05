@@ -1,6 +1,6 @@
 # einthoven-web
 
-> test
+> ![image](https://github.com/zero3william/Einthoven-web/blob/master/ecgDemo.gif)
 
 ## Build Setup
 
